@@ -1,0 +1,52 @@
+{
+  "name": "ritgram",
+  "version": "0.1.0",
+  "description": "RITGram: Instagrams from around RIT",
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "babelify": "^6.1.3",
+    "browserify": "^11.0.1",
+    "gulp": "^3.8.7",
+    "gulp-connect": "^2.2.0",
+    "gulp-sass": "^2.0.4",
+    "gulp-util": "^3.0.6",
+    "reactify": "^1.1.1",
+    "require-dir": "^0.3.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.3.1"
+  },
+  "scripts": {
+    "dev": "gulp --type dev",
+    "start": "gulp",
+    "build": "gulp build"
+  },
+  "jest": {
+    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
+    "testFileExtensions": [
+      "es6",
+      "js"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "es6"
+    ]
+  },
+  "dependencies": {
+    "babel-eslint": "^4.0.10",
+    "classnames": "^2.1.3",
+    "eslint": "^1.2.0",
+    "eslint-plugin-react": "^3.2.3",
+    "flux": "^2.1.1",
+    "general-store": "^0.2.2",
+    "immutable": "^3.7.4",
+    "jquery": "^2.1.4",
+    "lodash": "^3.10.1",
+    "moment": "^2.10.6",
+    "object-assign": "^3.0.0",
+    "react": "^0.13.3",
+    "react-bootstrap": "^0.24.5"
+  }
+}
