@@ -1,0 +1,70 @@
+body {
+  padding: 25px 0; }
+
+.image-entry {
+  margin: 15px 0; }
+
+.fa {
+  margin-right: 5px; }
+
+span + .fa {
+  margin-left: 5px; }
+
+.img-rounded {
+  border-radius: 3px;
+  border: 2px solid #fff; }
+
+.close-modal {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  opacity: .6;
+  transition: opacity 250ms ease-in;
+  z-index: 10000; }
+  .close-modal:hover {
+    opacity: 1;
+    cursor: pointer; }
+
+.video-marker,
+.modal-video-marker {
+  position: absolute;
+  top: 5px;
+  right: 20px;
+  opacity: .8;
+  transition: opacity 250ms ease-in;
+  z-index: 1;
+  font-size: 20px; }
+  .video-marker:hover,
+  .modal-video-marker:hover {
+    opacity: 1;
+    cursor: pointer; }
+
+.modal-video-marker {
+  top: 40%;
+  right: 40%;
+  font-size: 120px; }
+
+.modal-content .row {
+  margin: 0; }
+
+.modal-content .col-md-8,
+.modal-content .col-md-4 {
+  padding-left: 0; }
+
+.modal-content .modal-title {
+  margin: 20px 0; }
+  .modal-content .modal-title .username {
+    font-size: 24px; }
+  .modal-content .modal-title .user-avatar {
+    max-width: 75px;
+    vertical-align: middle;
+    display: inline-block;
+    margin-right: 8px; }
+  .modal-content .modal-title .insta-information {
+    margin-top: 15px; }
+
+.modal-content .modal-text {
+  margin-top: 20px; }
+
+.insta-video .row {
+  margin-bottom: -5px; }
