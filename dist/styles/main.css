@@ -47,8 +47,8 @@ span + .fa {
 .modal-content .row {
   margin: 0; }
 
-.modal-content .col-md-8,
-.modal-content .col-md-4 {
+.modal-content .col-xs-8,
+.modal-content .col-xs-4 {
   padding-left: 0; }
 
 .modal-content .modal-title {

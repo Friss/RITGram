@@ -53,10 +53,10 @@ export default React.createClass({
       return (<Modal bsSize='large' className={"insta-"+activeImage.getIn(['full_data', 'type'])} show={showModal} onHide={this.handleModalClose}>
           <Icon className="close-modal" onClickHandler={this.handleModalClose} iconName="times" />
           <Row>
-            <Col md={8}>
+            <Col xs={8}>
               {this.renderMedia()}
             </Col>
-            <Col md={4}>
+            <Col xs={4}>
               <div className="modal-title">
                 {this.renderUser()}
                 {this.renderInstaInformation()}

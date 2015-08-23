@@ -26,7 +26,7 @@ export default React.createClass({
     }
 
     return (
-      <Col md={2} className="image-entry">
+      <Col md={2} xs={4} className="image-entry">
         {icon}
         <a href={image.getIn(['link'])}
           target={"_blank"}

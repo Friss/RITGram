@@ -55447,7 +55447,7 @@ var dispatcher = _setup2['default'].getDispatcher();
 
 exports['default'] = {
   fetchImages: function fetchImages(pageNumber) {
-    fetch('http://localhost:3000/api/v1/pictures?page=' + pageNumber).then(function (response) {
+    fetch('http://api.ritgram.xyz/api/v1/pictures?page=' + pageNumber).then(function (response) {
       return response.json();
     }).then(function (images) {
       dispatcher.dispatch({
@@ -55833,12 +55833,12 @@ exports['default'] = _reactAddons2['default'].createClass({
           null,
           _reactAddons2['default'].createElement(
             _reactBootstrapLibCol2['default'],
-            { md: 8 },
+            { xs: 8 },
             this.renderMedia()
           ),
           _reactAddons2['default'].createElement(
             _reactBootstrapLibCol2['default'],
-            { md: 4 },
+            { xs: 4 },
             _reactAddons2['default'].createElement(
               'div',
               { className: 'modal-title' },
@@ -56001,7 +56001,7 @@ exports['default'] = _reactAddons2['default'].createClass({
 
     return _reactAddons2['default'].createElement(
       _reactBootstrapLibCol2['default'],
-      { md: 2, className: 'image-entry' },
+      { md: 2, xs: 4, className: 'image-entry' },
       icon,
       _reactAddons2['default'].createElement(
         'a',
