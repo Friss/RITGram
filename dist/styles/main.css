@@ -64,7 +64,23 @@ span + .fa {
     margin-top: 15px; }
 
 .modal-content .modal-text {
-  margin-top: 20px; }
+  margin-top: 20px;
+  word-break: break-word; }
 
 .insta-video .row {
   margin-bottom: -5px; }
+
+.prev-image,
+.next-image {
+  position: absolute;
+  z-index: 1000;
+  font-size: 72px;
+  color: #fff;
+  cursor: pointer;
+  top: 45%; }
+
+.prev-image {
+  left: -15%; }
+
+.next-image {
+  right: -15%; }

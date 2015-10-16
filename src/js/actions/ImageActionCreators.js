@@ -18,10 +18,21 @@ export default {
   },
   selectImage(image) {
     dispatcher.dispatch({
-      actionType: 'SELECT_IMAGE', // required field
+      actionType: 'SELECT_IMAGE',
       data: {
         image: image
       }
     });
+  },
+  selectNextImage() {
+    dispatcher.dispatch({
+      actionType: 'SELECT_NEXT_IMAGE'
+    });
+  },
+  selectPreviousImage() {
+    dispatcher.dispatch({
+      actionType: 'SELECT_PREVIOUS_IMAGE'
+    });
   }
+
 };

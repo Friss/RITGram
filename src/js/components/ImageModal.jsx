@@ -1,6 +1,8 @@
 import React, {addons} from 'react/addons';
 import Autolinker from '../vendor/autolinker'
 import moment from 'moment';
+import $ from 'jquery';
+import _ from 'lodash';
 
 import Modal from 'react-bootstrap/lib/Modal';
 import Row from 'react-bootstrap/lib/Row';
@@ -8,21 +10,63 @@ import Col from 'react-bootstrap/lib/Col';
 
 import ActionCreators from '../actions/ImageActionCreators';
 import Icon from './Icon.jsx';
+import {ESC, LEFT, RIGHT} from '../constants/keyCodes';
 
 const {PureRenderMixin} = addons;
+const {each} = _;
 const autoLinker = new Autolinker({hashtag: 'instagram', twitter: false});
+const $window = $(window);
 
 export default React.createClass({
   mixins: [
     PureRenderMixin
   ],
 
+  componentDidMount() {
+    this._windowListeners = this.getWindowListeners()
+    each(this._windowListeners, (handler, eventName) => {
+      $window.on(eventName, handler);
+    });
+  },
+
+  componentWillUnmount() {
+    each(
+      this._windowListeners,
+      (handler, eventName) => $window.off(eventName, handler)
+    );
+  },
+
   getInitialState() {
     return {videoPlaying: false}
   },
 
+  getWindowListeners() {
+    return {
+      keyup: this.handleWindowKeyUp,
+    }
+  },
+
   handleModalClose() {
     ActionCreators.selectImage(null)
+  },
+
+  handlePrevImage() {
+    ActionCreators.selectPreviousImage()
+  },
+
+  handleNextImage() {
+    ActionCreators.selectNextImage(null)
+  },
+
+  handleWindowKeyUp({keyCode}) {
+    switch(keyCode) {
+      case ESC:
+        return this.handleModalClose();
+      case LEFT:
+        return this.handlePrevImage();
+      case RIGHT:
+        return this.handleNextImage();
+    }
   },
 
   handleVideoClick() {
@@ -50,7 +94,8 @@ export default React.createClass({
     const showModal = activeImage ? true : false;
 
     if (showModal){
-      return (<Modal bsSize='large' className={"insta-"+activeImage.getIn(['full_data', 'type'])} show={showModal} onHide={this.handleModalClose}>
+      return (
+        <Modal bsSize='large' className={"insta-"+activeImage.getIn(['full_data', 'type'])} show={showModal} onHide={this.handleModalClose}>
           <Icon className="close-modal" onClickHandler={this.handleModalClose} iconName="times" />
           <Row>
             <Col xs={8}>
@@ -66,7 +111,10 @@ export default React.createClass({
               </div>
             </Col>
           </Row>
-        </Modal>)
+          <Icon className="prev-image" onClickHandler={this.handlePrevImage} iconName="arrow-left" />
+          <Icon className="next-image" onClickHandler={this.handleNextImage} iconName="arrow-right" />
+        </Modal>
+      )
     } else {
       return null;
     }

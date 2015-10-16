@@ -1,9 +1,9 @@
 import GeneralStore from 'general-store';
 import Immutable from 'immutable';
 
-let {fromJS} = Immutable;
+const {fromJS} = Immutable;
 
-var dataStore = fromJS({
+let dataStore = fromJS({
   images: [],
   page: 0,
   activeImage: null
@@ -25,11 +25,14 @@ var ImagesStore = GeneralStore.define()
 
     return
   })
-  .defineResponseTo('SELECT_IMAGE', function (actionData) {
-    const {image} = actionData;
-
+  .defineResponseTo('SELECT_IMAGE', function ({image}) {
     dataStore = dataStore.set('activeImage', image);
-
+  })
+  .defineResponseTo('SELECT_NEXT_IMAGE', function () {
+    dataStore = dataStore.set('activeImage', dataStore.getIn(['images', dataStore.get('images').indexOf(dataStore.get('activeImage'))+1]));
+  })
+  .defineResponseTo('SELECT_PREVIOUS_IMAGE', function () {
+    dataStore = dataStore.set('activeImage', dataStore.getIn(['images', dataStore.get('images').indexOf(dataStore.get('activeImage'))-1]));
   })
   .register();
 

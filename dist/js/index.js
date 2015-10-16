@@ -55461,17 +55461,28 @@ exports['default'] = {
   },
   selectImage: function selectImage(image) {
     dispatcher.dispatch({
-      actionType: 'SELECT_IMAGE', // required field
+      actionType: 'SELECT_IMAGE',
       data: {
         image: image
       }
     });
+  },
+  selectNextImage: function selectNextImage() {
+    dispatcher.dispatch({
+      actionType: 'SELECT_NEXT_IMAGE'
+    });
+  },
+  selectPreviousImage: function selectPreviousImage() {
+    dispatcher.dispatch({
+      actionType: 'SELECT_PREVIOUS_IMAGE'
+    });
   }
+
 };
 module.exports = exports['default'];
 
 
-},{"../setup":248}],241:[function(require,module,exports){
+},{"../setup":249}],241:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -55616,7 +55627,7 @@ exports['default'] = _reactAddons2['default'].createClass({
 module.exports = exports['default'];
 
 
-},{"../actions/ImageActionCreators":240,"../stores/ImagesStore":249,"./App.jsx":241,"general-store":6,"react/addons":67}],243:[function(require,module,exports){
+},{"../actions/ImageActionCreators":240,"../stores/ImagesStore":250,"./App.jsx":241,"general-store":6,"react/addons":67}],243:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -55761,6 +55772,14 @@ var _moment = require('moment');
 
 var _moment2 = _interopRequireDefault(_moment);
 
+var _jquery = require('jquery');
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 var _reactBootstrapLibModal = require('react-bootstrap/lib/Modal');
 
 var _reactBootstrapLibModal2 = _interopRequireDefault(_reactBootstrapLibModal);
@@ -55781,21 +55800,65 @@ var _IconJsx = require('./Icon.jsx');
 
 var _IconJsx2 = _interopRequireDefault(_IconJsx);
 
+var _constantsKeyCodes = require('../constants/keyCodes');
+
 var PureRenderMixin = _reactAddons.addons.PureRenderMixin;
+var each = _lodash2['default'].each;
 
 var autoLinker = new _vendorAutolinker2['default']({ hashtag: 'instagram', twitter: false });
+var $window = (0, _jquery2['default'])(window);
 
 exports['default'] = _reactAddons2['default'].createClass({
   displayName: 'ImageModal',
 
   mixins: [PureRenderMixin],
 
+  componentDidMount: function componentDidMount() {
+    this._windowListeners = this.getWindowListeners();
+    each(this._windowListeners, function (handler, eventName) {
+      $window.on(eventName, handler);
+    });
+  },
+
+  componentWillUnmount: function componentWillUnmount() {
+    each(this._windowListeners, function (handler, eventName) {
+      return $window.off(eventName, handler);
+    });
+  },
+
   getInitialState: function getInitialState() {
     return { videoPlaying: false };
   },
 
+  getWindowListeners: function getWindowListeners() {
+    return {
+      keyup: this.handleWindowKeyUp
+    };
+  },
+
   handleModalClose: function handleModalClose() {
     _actionsImageActionCreators2['default'].selectImage(null);
+  },
+
+  handlePrevImage: function handlePrevImage() {
+    _actionsImageActionCreators2['default'].selectPreviousImage();
+  },
+
+  handleNextImage: function handleNextImage() {
+    _actionsImageActionCreators2['default'].selectNextImage(null);
+  },
+
+  handleWindowKeyUp: function handleWindowKeyUp(_ref) {
+    var keyCode = _ref.keyCode;
+
+    switch (keyCode) {
+      case _constantsKeyCodes.ESC:
+        return this.handleModalClose();
+      case _constantsKeyCodes.LEFT:
+        return this.handlePrevImage();
+      case _constantsKeyCodes.RIGHT:
+        return this.handleNextImage();
+    }
   },
 
   handleVideoClick: function handleVideoClick() {
@@ -55851,7 +55914,9 @@ exports['default'] = _reactAddons2['default'].createClass({
               this.renderBody()
             )
           )
-        )
+        ),
+        _reactAddons2['default'].createElement(_IconJsx2['default'], { className: 'prev-image', onClickHandler: this.handlePrevImage, iconName: 'arrow-left' }),
+        _reactAddons2['default'].createElement(_IconJsx2['default'], { className: 'next-image', onClickHandler: this.handleNextImage, iconName: 'arrow-right' })
       );
     } else {
       return null;
@@ -55952,7 +56017,7 @@ exports['default'] = _reactAddons2['default'].createClass({
 module.exports = exports['default'];
 
 
-},{"../actions/ImageActionCreators":240,"../vendor/autolinker":250,"./Icon.jsx":243,"moment":10,"react-bootstrap/lib/Col":13,"react-bootstrap/lib/Modal":15,"react-bootstrap/lib/Row":22,"react/addons":67}],246:[function(require,module,exports){
+},{"../actions/ImageActionCreators":240,"../constants/keyCodes":247,"../vendor/autolinker":251,"./Icon.jsx":243,"jquery":8,"lodash":9,"moment":10,"react-bootstrap/lib/Col":13,"react-bootstrap/lib/Modal":15,"react-bootstrap/lib/Row":22,"react/addons":67}],246:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -56018,6 +56083,34 @@ module.exports = exports['default'];
 
 
 },{"../actions/ImageActionCreators":240,"./Icon.jsx":243,"react-bootstrap/lib/Col":13,"react/addons":67}],247:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var BRACKET_LEFT = 219;
+exports.BRACKET_LEFT = BRACKET_LEFT;
+var BRACKET_RIGHT = 221;
+exports.BRACKET_RIGHT = BRACKET_RIGHT;
+var DOWN = 40;
+exports.DOWN = DOWN;
+var ENTER = 13;
+exports.ENTER = ENTER;
+var ESC = 27;
+exports.ESC = ESC;
+var LEFT = 37;
+exports.LEFT = LEFT;
+var RIGHT = 39;
+exports.RIGHT = RIGHT;
+var UP = 38;
+exports.UP = UP;
+var Y = 89;
+exports.Y = Y;
+var Z = 90;
+exports.Z = Z;
+
+
+},{}],248:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -56037,7 +56130,7 @@ var _componentsAppContainerJsx2 = _interopRequireDefault(_componentsAppContainer
 _react2['default'].render(_react2['default'].createElement(_componentsAppContainerJsx2['default'], null), document.getElementById('main'));
 
 
-},{"./components/AppContainer.jsx":242,"./setup":248,"react":239}],248:[function(require,module,exports){
+},{"./components/AppContainer.jsx":242,"./setup":249,"react":239}],249:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -56065,7 +56158,7 @@ exports['default'] = {
 module.exports = exports['default'];
 
 
-},{"flux":3,"general-store":6}],249:[function(require,module,exports){
+},{"flux":3,"general-store":6}],250:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -56100,16 +56193,20 @@ var ImagesStore = _generalStore2['default'].define().defineGet(function () {
   }));
 
   return;
-}).defineResponseTo('SELECT_IMAGE', function (actionData) {
-  var image = actionData.image;
+}).defineResponseTo('SELECT_IMAGE', function (_ref) {
+  var image = _ref.image;
 
   dataStore = dataStore.set('activeImage', image);
+}).defineResponseTo('SELECT_NEXT_IMAGE', function () {
+  dataStore = dataStore.set('activeImage', dataStore.getIn(['images', dataStore.get('images').indexOf(dataStore.get('activeImage')) + 1]));
+}).defineResponseTo('SELECT_PREVIOUS_IMAGE', function () {
+  dataStore = dataStore.set('activeImage', dataStore.getIn(['images', dataStore.get('images').indexOf(dataStore.get('activeImage')) - 1]));
 }).register();
 
 module.exports = ImagesStore;
 
 
-},{"general-store":6,"immutable":7}],250:[function(require,module,exports){
+},{"general-store":6,"immutable":7}],251:[function(require,module,exports){
 /*!
  * Autolinker.js
  * 0.18.1
@@ -56372,4 +56469,4 @@ module.exports = ImagesStore;
 });
 
 
-},{}]},{},[247]);
+},{}]},{},[248]);
