@@ -10,7 +10,7 @@ import Col from 'react-bootstrap/lib/Col';
 
 import ActionCreators from '../actions/ImageActionCreators';
 import Icon from './Icon.jsx';
-import {ESC, LEFT, RIGHT} from '../constants/keyCodes';
+import {ESC, LEFT, RIGHT, J, K} from '../constants/keyCodes';
 
 const {PureRenderMixin} = addons;
 const {each} = _;
@@ -63,8 +63,10 @@ export default React.createClass({
       case ESC:
         return this.handleModalClose();
       case LEFT:
+      case J:
         return this.handlePrevImage();
       case RIGHT:
+      case K:
         return this.handleNextImage();
     }
   },
