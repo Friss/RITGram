@@ -1,10 +1,10 @@
-import React, {addons} from 'react/addons';
+import React, {PropTypes} from 'react';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
+
 import GeneralStore from 'general-store';
 import ImagesStore from '../stores/ImagesStore'
 import ActionCreator from '../actions/ImageActionCreators';
 import App from './App.jsx';
-
-const {PureRenderMixin} = addons;
 
 export default React.createClass({
   mixins: [
@@ -28,7 +28,8 @@ export default React.createClass({
       <App
         images={images}
         page={page}
-        activeImage={activeImage}/>
+        activeImage={activeImage}
+      />
     );
   }
 });

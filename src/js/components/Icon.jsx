@@ -1,20 +1,23 @@
-import React, {addons} from 'react/addons';
+import React, {PropTypes} from 'react';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import classNames from 'classnames';
-
-const {PureRenderMixin} = addons;
 
 export default React.createClass({
   mixins: [
     PureRenderMixin
   ],
 
-  getDefaultProps() {
-    return {className: ''}
+  propTypes: {
+    iconName: PropTypes.string.isRequired
   },
 
   render() {
     const {iconName, className, onClickHandler} = this.props;
-    const iconClasses = "fa fa-" + iconName + " " + className;
+    const iconClasses = classNames(
+      "fa",
+      "fa-" + iconName,
+      className
+    )
 
     return (
       <i onClick={onClickHandler} className={iconClasses} />

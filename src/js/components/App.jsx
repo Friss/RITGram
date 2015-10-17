@@ -1,11 +1,9 @@
-import React, {PropTypes, addons} from 'react/addons';
+import React, {PropTypes} from 'react';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 
 import ImageList from './ImageList.jsx';
 import Icon from './Icon.jsx';
 import ImageModal from './ImageModal.jsx';
-
-
-const {PureRenderMixin} = addons;
 
 export default React.createClass({
   mixins: [
@@ -32,7 +30,8 @@ export default React.createClass({
 
         <ImageList
           images={images}
-          page={page} />
+          page={page}
+        />
 
         <ImageModal activeImage={activeImage} />
 
