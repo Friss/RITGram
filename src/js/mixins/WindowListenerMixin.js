@@ -5,7 +5,7 @@ const $window = $(window);
 
 export default {
   componentDidMount() {
-    this._windowListeners = this.getWindowListeners()
+    this._windowListeners = this.getWindowListeners();
     each(this._windowListeners, (handler, eventName) => {
       $window.on(eventName, handler);
     });
