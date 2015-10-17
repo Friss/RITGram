@@ -55855,8 +55855,10 @@ exports['default'] = _reactAddons2['default'].createClass({
       case _constantsKeyCodes.ESC:
         return this.handleModalClose();
       case _constantsKeyCodes.LEFT:
+      case _constantsKeyCodes.J:
         return this.handlePrevImage();
       case _constantsKeyCodes.RIGHT:
+      case _constantsKeyCodes.K:
         return this.handleNextImage();
     }
   },
@@ -56104,6 +56106,10 @@ var RIGHT = 39;
 exports.RIGHT = RIGHT;
 var UP = 38;
 exports.UP = UP;
+var J = 74;
+exports.J = J;
+var K = 75;
+exports.K = K;
 var Y = 89;
 exports.Y = Y;
 var Z = 90;

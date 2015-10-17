@@ -6,5 +6,7 @@ export const ESC = 27;
 export const LEFT = 37;
 export const RIGHT = 39;
 export const UP = 38;
+export const J = 74;
+export const K = 75;
 export const Y = 89;
 export const Z = 90;
