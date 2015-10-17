@@ -1,8 +1,10 @@
-import React, {addons} from 'react/addons';
+import React, {PropTypes} from 'react';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import Autolinker from '../vendor/autolinker'
 import moment from 'moment';
 import $ from 'jquery';
-import _ from 'lodash';
+import {each} from 'lodash';
+import classNames from 'classNames';
 
 import Modal from 'react-bootstrap/lib/Modal';
 import Row from 'react-bootstrap/lib/Row';
@@ -11,33 +13,21 @@ import Col from 'react-bootstrap/lib/Col';
 import ActionCreators from '../actions/ImageActionCreators';
 import Icon from './Icon.jsx';
 import {ESC, LEFT, RIGHT, J, K} from '../constants/keyCodes';
+import WindowListenerMixin from '../mixins/WindowListenerMixin';
 
-const {PureRenderMixin} = addons;
-const {each} = _;
 const autoLinker = new Autolinker({hashtag: 'instagram', twitter: false});
 const $window = $(window);
 
 export default React.createClass({
   mixins: [
-    PureRenderMixin
+    PureRenderMixin,
+    WindowListenerMixin
   ],
 
-  componentDidMount() {
-    this._windowListeners = this.getWindowListeners()
-    each(this._windowListeners, (handler, eventName) => {
-      $window.on(eventName, handler);
-    });
-  },
-
-  componentWillUnmount() {
-    each(
-      this._windowListeners,
-      (handler, eventName) => $window.off(eventName, handler)
-    );
-  },
-
   getInitialState() {
-    return {videoPlaying: false}
+    return {
+      videoPlaying: false
+    }
   },
 
   getWindowListeners() {
@@ -73,7 +63,8 @@ export default React.createClass({
 
   handleVideoClick() {
     const {videoPlaying} = this.state;
-    const video = this.refs.insta_video.getDOMNode();
+    const video = ReactDOM.findDOMNode(this.refs.insta_video);
+
     if (videoPlaying) {
       video.pause();
     } else {
@@ -93,33 +84,53 @@ export default React.createClass({
 
   render() {
     const {activeImage} = this.props;
-    const showModal = activeImage ? true : false;
+    const showModal = !!activeImage;
 
-    if (showModal){
-      return (
-        <Modal bsSize='large' className={"insta-"+activeImage.getIn(['full_data', 'type'])} show={showModal} onHide={this.handleModalClose}>
-          <Icon className="close-modal" onClickHandler={this.handleModalClose} iconName="times" />
-          <Row>
-            <Col xs={8}>
-              {this.renderMedia()}
-            </Col>
-            <Col xs={4}>
-              <div className="modal-title">
-                {this.renderUser()}
-                {this.renderInstaInformation()}
-              </div>
-              <div className="modal-text">
-                {this.renderBody()}
-              </div>
-            </Col>
-          </Row>
-          <Icon className="prev-image" onClickHandler={this.handlePrevImage} iconName="arrow-left" />
-          <Icon className="next-image" onClickHandler={this.handleNextImage} iconName="arrow-right" />
-        </Modal>
-      )
-    } else {
+    if (!showModal){
       return null;
     }
+
+    return (
+      <Modal
+        bsSize='large'
+        className={"insta-"+activeImage.getIn(['full_data', 'type'])}
+        show={showModal}
+        onHide={this.handleModalClose}
+      >
+        <Icon
+          className="close-modal"
+          onClickHandler={this.handleModalClose}
+          iconName="times"
+        />
+        <Row>
+          <Col
+            xs={8}
+            className="text-center"
+          >
+            {this.renderMedia()}
+          </Col>
+          <Col xs={4}>
+            <div className="modal-title">
+              {this.renderUser()}
+              {this.renderInstaInformation()}
+            </div>
+            <div className="modal-text">
+              {this.renderBody()}
+            </div>
+          </Col>
+        </Row>
+        <Icon
+          className="prev-image"
+          onClickHandler={this.handlePrevImage}
+          iconName="arrow-left"
+        />
+        <Icon
+          className="next-image"
+          onClickHandler={this.handleNextImage}
+          iconName="arrow-right"
+        />
+      </Modal>
+    )
   },
 
   renderMedia() {
@@ -128,56 +139,85 @@ export default React.createClass({
     let media;
 
     if (activeImage.getIn(['full_data', 'type']) === "image") {
-      media = <img src={activeImage.getIn(['full_data', 'images', 'standard_resolution', 'url'])} className="img-responsive"/>
-    } else {
-      let playButtonClasses = "modal-video-marker"
-      if (videoPlaying){
-        playButtonClasses += " hidden"
-      }
-      media = <div>
-          <Icon onClickHandler={this.handleVideoClick} className={playButtonClasses} iconName="play" />
-          <video
-            poster={activeImage.getIn(['full_data', 'images', 'standard_resolution', 'url'])}
-            src={activeImage.getIn(['full_data', 'videos', 'standard_resolution', 'url'])}
-            style={{width: "100%", height: "100%"}}
-            controls={true}
-            onClick={this.handleVideoClick}
-            ref="insta_video">
-              <source src={activeImage.getIn(['full_data', 'videos', 'standard_resolution', 'url'])} type="video/mp4" />
-              Sorry, your browser doesn't support video
-          </video>
-        </div>
-    }
+      return (
+        <img
+          src={activeImage.getIn(['full_data', 'images', 'standard_resolution', 'url'])}
+          className="img-responsive"
+        />
+      )
 
-    return media
+    }
+    const playButtonClasses = classNames(
+      "modal-video-marker",
+      {
+        "hidden": videoPlaying
+      }
+    )
+
+    return (
+      <div>
+        <Icon
+          onClickHandler={this.handleVideoClick}
+          className={playButtonClasses}
+          iconName="play"
+        />
+        <video
+          poster={activeImage.getIn(['full_data', 'images', 'standard_resolution', 'url'])}
+          src={activeImage.getIn(['full_data', 'videos', 'standard_resolution', 'url'])}
+          style={{width: "100%", height: "100%"}}
+          controls={true}
+          onClick={this.handleVideoClick}
+          ref="insta_video"
+        >
+          <source
+            src={activeImage.getIn(['full_data', 'videos', 'standard_resolution', 'url'])}
+            type="video/mp4"
+          />
+          Sorry, your browser doesn't support video
+        </video>
+      </div>
+    )
   },
 
   renderUser() {
     const {activeImage} = this.props;
 
-    return (<div className="user-information">
-        <img src={activeImage.getIn(['full_data', 'user', 'profile_picture'])} className="img-rounded img-responsive user-avatar" />
-        <span className="username">{activeImage.get('username')}</span>
+    return (
+      <div className="user-information">
+        <img
+          src={activeImage.getIn(['full_data', 'user', 'profile_picture'])}
+          className="img-rounded img-responsive user-avatar"
+        />
+        <span className="username">
+          {activeImage.get('username')}
+        </span>
       </div>
     )
-
   },
 
   renderInstaInformation() {
     const {activeImage} = this.props;
 
-    return (<p className="insta-information"><Icon iconName="clock-o" />
+    return (
+      <p className="insta-information"><Icon iconName="clock-o" />
         <span>
-          <a href={`https://instagram.com${activeImage.get('path')}`} target="_blank">
+          <a
+            href={`https://instagram.com${activeImage.get('path')}`}
+            target="_blank"
+          >
             {moment(activeImage.get('created_time')).fromNow()}
           </a>,
         </span>
 
         <Icon iconName="map-marker" />
-        <span>{activeImage.getIn(['full_data', 'location', 'name'])},</span>
+        <span>
+          {activeImage.getIn(['full_data', 'location', 'name'])},
+        </span>
 
         <Icon iconName="camera" />
-        <span>{activeImage.get('filter')} filter</span>
+        <span>
+          {activeImage.get('filter')} filter
+        </span>
       </p>
     )
   },

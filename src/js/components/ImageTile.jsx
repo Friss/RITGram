@@ -1,9 +1,8 @@
-import React, {addons} from 'react/addons';
+import React, {PropTypes} from 'react';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import ActionCreator from '../actions/ImageActionCreators';
 import Col from 'react-bootstrap/lib/Col';
 import Icon from './Icon.jsx';
-
-const {PureRenderMixin} = addons;
 
 export default React.createClass({
   mixins: [
@@ -17,24 +16,42 @@ export default React.createClass({
 
   render() {
     const {image} = this.props;
-    let icon;
-
-    if ( image.getIn(['full_data', 'type']) === 'video') {
-      icon = <Icon onClickHandler={this.handleClick} className="video-marker" iconName="play" />
-    } else {
-      icon = null;
-    }
 
     return (
-      <Col md={2} xs={4} className="image-entry">
-        {icon}
-        <a href={image.getIn(['link'])}
+      <Col
+        md={2}
+        xs={4}
+        className="image-entry"
+      >
+        {this.renderIcon()}
+        <a
+          href={image.getIn(['link'])}
           target={"_blank"}
-          onClick={this.handleClick}>
-            <img src={image.getIn(['full_data', 'images', 'standard_resolution', 'url'])} className="img-responsive"/>
+          onClick={this.handleClick}
+        >
+          <img
+            src={image.getIn(['full_data', 'images', 'standard_resolution', 'url'])}
+            className="img-responsive"
+          />
         </a>
       </Col>
     );
+  },
+
+  renderIcon() {
+    const {image} = this.props;
+
+    if (image.getIn(['full_data', 'type']) !== 'video') {
+      return null
+    }
+
+    return (
+      <Icon
+        onClickHandler={this.handleClick}
+        className="video-marker"
+        iconName="play"
+      />
+    )
   }
 
 });

@@ -1,50 +1,52 @@
-import React, {addons} from 'react/addons';
+import React, {PropTypes} from 'react';
+import ReactDOM from 'react-dom';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import $ from 'jquery'
 import _ from 'lodash';
 import ImageTile from './ImageTile.jsx';
 import Alert from 'react-bootstrap/lib/Alert';
 import Row from 'react-bootstrap/lib/Row';
 import ActionCreator from '../actions/ImageActionCreators';
+import WindowListenerMixin from '../mixins/WindowListenerMixin';
 
-const {PureRenderMixin} = addons;
+const INFINITE_SCROLL_TRIGGER = 225;
 
 export default React.createClass({
   mixins: [
-    PureRenderMixin
+    PureRenderMixin,
+    WindowListenerMixin
   ],
 
-  componentDidMount() {
-    let debouncedInfiniteScroll = _.debounce(this.handleInfiniteScroll, 250)
-    $(window).on("scroll", debouncedInfiniteScroll)
+  getWindowListeners() {
+    return {
+      scroll: _.debounce(this.handleInfiniteScroll, 250),
+    }
   },
 
   handleInfiniteScroll() {
-    let triggerPoint = 125;
-    let imagesContainer = this.refs.images_root.getDOMNode();
+    const imagesContainer = ReactDOM.findDOMNode(this);
 
-    if (imagesContainer.scrollTop + imagesContainer.clientHeight + triggerPoint > imagesContainer.scrollHeight) {
+    if ($(window).scrollTop() >= imagesContainer.scrollHeight - window.innerHeight - INFINITE_SCROLL_TRIGGER) {
       ActionCreator.fetchImages(this.props.page + 1);
     }
   },
 
   render() {
     let {images} = this.props;
-    let rowContent;
-
-    if (images.size === 0) {
-      rowContent = null
-    } else {
-      rowContent = images.map((image) =>
-          <ImageTile
-            key={image.get('id')}
-            image={image} />
-        )
-    }
 
     return (
-      <Row ref="images_root">
-        {rowContent}
+      <Row>
+        {images.map(this.renderImage)}
       </Row>
     );
+  },
+
+  renderImage(image) {
+    return (
+      <ImageTile
+        key={image.get('id')}
+        image={image}
+      />
+    )
   }
 });
